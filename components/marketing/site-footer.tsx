@@ -1,47 +1,42 @@
 import Link from 'next/link';
-import { Scale } from 'lucide-react';
+import { Logo } from '@/components/brand';
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="mx-auto grid max-w-7xl gap-8 py-12 container-px md:grid-cols-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <Scale className="h-5 w-5 text-gold" />
-            <span className="font-serif text-base font-semibold">Sterling &amp; Crane</span>
+    <footer className="border-t border-border bg-charcoal-950 text-white/70">
+      <div className="mx-auto max-w-7xl px-5 py-16 container-px">
+        <div className="grid gap-12 md:grid-cols-5">
+          <div className="md:col-span-2">
+            <Logo tone="light" showTagline />
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/60">
+              Private counsel for individuals and enterprises who expect discretion,
+              precision and an outcome — delivered with the calm of a trusted advisor.
+            </p>
           </div>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Trusted counsel for individuals and enterprises since 1998.
-          </p>
+          <FooterCol title="Firm" links={[['Attorneys', '/attorneys'], ['Practice Areas', '/#practice'], ['Our Approach', '/#approach']]} />
+          <FooterCol title="Clients" links={[['Client Portal', '/login'], ['Book a Consultation', '/book'], ['Open an Account', '/signup']]} />
+          <FooterCol title="Contact" links={[['1 Liberty Plaza, NY', '#'], ['(212) 555-0182', '#'], ['hello@lexara.legal', '#']]} />
         </div>
-        <div>
-          <h4 className="text-sm font-semibold">Firm</h4>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link href="/attorneys" className="hover:text-foreground">Attorneys</Link></li>
-            <li><Link href="/#practice-areas" className="hover:text-foreground">Practice Areas</Link></li>
-            <li><Link href="/#approach" className="hover:text-foreground">Our Approach</Link></li>
-          </ul>
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/40 sm:flex-row">
+          <p>© {new Date().getFullYear()} Lexara Legal LLP. All rights reserved. Attorney advertising.</p>
+          <p className="tracking-luxe">PRIVILEGED &amp; CONFIDENTIAL</p>
         </div>
-        <div>
-          <h4 className="text-sm font-semibold">Clients</h4>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link href="/login" className="hover:text-foreground">Client Portal</Link></li>
-            <li><Link href="/book" className="hover:text-foreground">Book a Consultation</Link></li>
-            <li><Link href="/signup" className="hover:text-foreground">Open an Account</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold">Contact</h4>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li>1 Liberty Plaza, Suite 4100</li>
-            <li>New York, NY 10006</li>
-            <li>(212) 555-0182</li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Sterling &amp; Crane LLP. All rights reserved. Attorney advertising.
       </div>
     </footer>
+  );
+}
+
+function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
+  return (
+    <div>
+      <h4 className="eyebrow mb-4">{title}</h4>
+      <ul className="space-y-3 text-sm">
+        {links.map(([label, href]) => (
+          <li key={label}>
+            <Link href={href} className="text-white/60 transition-colors hover:text-gold">{label}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

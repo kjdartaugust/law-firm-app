@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Settings, Scale } from 'lucide-react';
+import { Menu, X, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/components/brand';
 import { getNav, adminNavItem } from '@/components/portal/nav-items';
 import type { UserRole } from '@/lib/types';
 
@@ -58,10 +59,7 @@ export function MobileNav({ role }: { role: UserRole }) {
           <div className="absolute inset-0 bg-black/50" onClick={() => setOpen(false)} />
           <div className="absolute left-0 top-0 flex h-full w-72 max-w-[80%] flex-col border-r border-border bg-card shadow-xl">
             <div className="flex h-16 items-center justify-between border-b border-border px-5">
-              <Link href="/" className="flex items-center gap-2">
-                <Scale className="h-5 w-5 text-gold" />
-                <span className="font-serif text-base font-semibold">Sterling &amp; Crane</span>
-              </Link>
+              <Logo />
               <button
                 type="button"
                 aria-label="Close menu"

@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import { LoginForm } from './login-form';
 
-export const metadata = { title: 'Sign in — Sterling & Crane' };
+export const metadata = { title: 'Sign in — Lexara Legal' };
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ redirect?: string }> }) {
   const { redirect } = await searchParams;
   return (
     <div>
-      <h1 className="font-serif text-2xl font-bold">Welcome back</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Sign in to your client portal.</p>
+      <p className="eyebrow mb-3">Client Portal</p>
+      <h1 className="font-serif text-3xl font-bold">Welcome back</h1>
+      <p className="mt-1.5 text-sm text-muted-foreground">Sign in to access your matters.</p>
       <LoginForm redirectTo={redirect} />
       <p className="mt-6 text-center text-sm text-muted-foreground">
         New client?{' '}

@@ -6,11 +6,12 @@ import { StatCard } from '@/components/portal/stat-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RoleControl } from '@/components/portal/role-control';
+import { CasesBar } from '@/components/portal/charts';
 import { InvoiceForm } from './invoice-form';
 import { formatCurrency, formatDate, initials } from '@/lib/utils';
 import type { Profile, Case, Invoice, Appointment } from '@/lib/types';
 
-export const metadata = { title: 'Admin' };
+export const metadata = { title: 'Admin — Lexara Legal' };
 
 export default async function AdminPage() {
   await requireAdmin();
@@ -88,21 +89,35 @@ export default async function AdminPage() {
         </Card>
       </div>
 
-      <Card className="mt-6">
-        <CardHeader><CardTitle>All cases</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
-          {caseList.length === 0 && <p className="text-sm text-muted-foreground">No cases yet.</p>}
-          {caseList.map((c) => (
-            <div key={c.id} className="flex items-center justify-between rounded-md border border-border p-3">
-              <div>
-                <p className="text-sm font-medium">{c.title}</p>
-                <p className="text-xs text-muted-foreground">{c.reference} · opened {formatDate(c.opened_at)}</p>
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <Card>
+          <CardHeader><CardTitle>Matters by status</CardTitle></CardHeader>
+          <CardContent>
+            <CasesBar
+              data={(['open', 'pending', 'closed'] as const).map((s) => ({
+                status: s[0].toUpperCase() + s.slice(1),
+                count: caseList.filter((c) => c.status === s).length,
+              }))}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader><CardTitle>All matters</CardTitle></CardHeader>
+          <CardContent className="space-y-2">
+            {caseList.length === 0 && <p className="text-sm text-muted-foreground">No matters yet.</p>}
+            {caseList.map((c) => (
+              <div key={c.id} className="flex items-center justify-between rounded-xl border border-border p-3.5 transition-colors hover:bg-accent/40">
+                <div>
+                  <p className="text-sm font-medium">{c.title}</p>
+                  <p className="text-xs text-muted-foreground">{c.reference} · opened {formatDate(c.opened_at)}</p>
+                </div>
+                <Badge status={c.status} />
               </div>
-              <Badge status={c.status} />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }

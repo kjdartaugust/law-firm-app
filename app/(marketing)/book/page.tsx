@@ -1,57 +1,66 @@
 import Link from 'next/link';
-import { CalendarClock } from 'lucide-react';
+import { CalendarClock, ShieldCheck, Clock } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AppointmentForm } from '@/components/portal/appointment-form';
+import { CalendarBooking } from '@/components/portal/calendar-booking';
+import { Reveal } from '@/components/motion/reveal';
 import type { Profile, Case } from '@/lib/types';
 
-export const metadata = { title: 'Book a Consultation — Sterling & Crane' };
+export const metadata = { title: 'Request a Consultation — Lexara Legal' };
 
 export default async function BookPage() {
   const user = await getCurrentUser();
 
   return (
-    <div className="mx-auto max-w-2xl py-16 container-px">
-      <div className="text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent text-gold">
-          <CalendarClock className="h-6 w-6" />
+    <>
+      <section className="bg-charcoal-950 pt-36 pb-20 text-white">
+        <div className="mx-auto max-w-3xl px-5 text-center container-px">
+          <Reveal>
+            <p className="eyebrow">Private Consultation</p>
+            <h1 className="mt-4 font-serif text-5xl font-bold md:text-6xl">Reserve your time</h1>
+            <p className="mx-auto mt-5 max-w-xl text-white/70">
+              Choose a date that suits you. Every consultation is confidential and conducted
+              with the discretion our clients expect.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-white/60">
+              <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-gold" /> Strictly confidential</span>
+              <span className="inline-flex items-center gap-2"><Clock className="h-4 w-4 text-gold" /> 30–90 minutes</span>
+              <span className="inline-flex items-center gap-2"><CalendarClock className="h-4 w-4 text-gold" /> Flexible scheduling</span>
+            </div>
+          </Reveal>
         </div>
-        <h1 className="mt-4 font-serif text-3xl font-bold">Book a Consultation</h1>
-        <p className="mt-2 text-muted-foreground">
-          Schedule a confidential meeting with one of our attorneys.
-        </p>
-      </div>
+      </section>
 
-      <Card className="mt-8">
-        <CardContent className="p-6">
+      <section className="mx-auto max-w-5xl px-5 py-16 container-px">
+        <div className="rounded-3xl border border-border bg-card p-6 shadow-luxe md:p-10">
           {user ? (
-            <BookingForm userId={user.id} />
+            <BookingPanel userId={user.id} />
           ) : (
-            <div className="py-8 text-center">
-              <p className="text-muted-foreground">
-                Please sign in or create an account to request a consultation. It keeps your
-                matter secure and lets you track everything in one place.
+            <div className="py-12 text-center">
+              <h2 className="font-serif text-2xl font-bold">Sign in to reserve</h2>
+              <p className="mx-auto mt-3 max-w-md text-muted-foreground">
+                A Lexara account keeps your matter secure and lets you track every appointment,
+                document and invoice in one place.
               </p>
-              <div className="mt-6 flex justify-center gap-3">
-                <Link href="/signup"><Button variant="gold">Create account</Button></Link>
-                <Link href="/login"><Button variant="outline">Sign in</Button></Link>
+              <div className="mt-7 flex justify-center gap-3">
+                <Link href="/signup"><Button variant="gold" size="lg">Create account</Button></Link>
+                <Link href="/login"><Button variant="outline" size="lg">Sign in</Button></Link>
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </section>
+    </>
   );
 }
 
-async function BookingForm({ userId }: { userId: string }) {
+async function BookingPanel({ userId }: { userId: string }) {
   const supabase = await createClient();
   const [{ data: lawyers }, { data: cases }] = await Promise.all([
     supabase.from('profiles').select('*').eq('role', 'lawyer').order('full_name'),
     supabase.from('cases').select('*').eq('client_id', userId).order('created_at', { ascending: false }),
   ]);
 
-  return <AppointmentForm lawyers={(lawyers ?? []) as Profile[]} cases={(cases ?? []) as Case[]} />;
+  return <CalendarBooking lawyers={(lawyers ?? []) as Profile[]} cases={(cases ?? []) as Case[]} />;
 }

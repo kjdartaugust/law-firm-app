@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Sterling & Crane — a full-stack law firm client portal built with **Next.js 16 (App Router, React 19)**, **Supabase** (Postgres + Auth + Storage), and **Tailwind CSS**.
+Lexara Legal — a full-stack law firm client portal built with **Next.js 16 (App Router, React 19)**, **Supabase** (Postgres + Auth + Storage), and **Tailwind CSS**.
+
+> Design system: premium legal aesthetic — deep charcoal (`#1A1A1A`) + rich gold (`#C9A84C`) on warm white (`#F9F7F4`); Playfair Display headings (`font-serif`/`var(--font-playfair)`) + Inter body. Brand colors/utilities live in `tailwind.config.ts` + `app/globals.css` (`.eyebrow`, `.hairline`, `.gold-text`, `.glass`, `bg-gold-sheen`, `shadow-luxe`). Scroll animations use Framer Motion via `components/motion/` (`Reveal`, `Stagger`/`StaggerItem`, `ParallaxHero`) — these are `'use client'`, so import the named `StaggerItem` (never a `.Item` static, which breaks across the server/client boundary). Charts use Recharts in `components/portal/charts.tsx`. Brand mark/logo in `components/brand.tsx`; floating navbar in `components/marketing/floating-nav.tsx`.
 
 > Next 16 note: `cookies()`/`headers()`, route `params`, and `searchParams` are async — always `await` them. The server Supabase `createClient()` is async (`await createClient()`). Forms use React 19 `useActionState` (not `useFormState`). Linting is ESLint 9 flat config (`eslint.config.mjs`); the lint script is `eslint .`, not `next lint`. Features: client portal, case management, document vault, appointment booking, billing/invoices, secure per-case messaging, lawyer directory, and an admin dashboard. Privacy is enforced primarily in the database via Row Level Security.
 

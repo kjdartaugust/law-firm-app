@@ -22,9 +22,12 @@ export function DocumentUpload({ caseId }: { caseId: string }) {
   return (
     <form action={onSubmit} ref={formRef} className="space-y-3">
       <input type="hidden" name="case_id" value={caseId} />
-      <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-secondary/40 px-4 py-8 text-center transition-colors hover:bg-accent">
-        <Upload className="h-6 w-6 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Click to choose a file (max 25 MB)</span>
+      <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-gold/30 bg-gold-sheen/5 px-4 py-10 text-center transition-all hover:border-gold/60 hover:bg-gold-sheen/10">
+        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold-sheen/15 text-gold">
+          <Upload className="h-5 w-5" />
+        </span>
+        <span className="text-sm font-medium">Drop a file or click to upload</span>
+        <span className="text-xs text-muted-foreground">PDF, images and documents · up to 25 MB</span>
         <input
           type="file"
           name="file"

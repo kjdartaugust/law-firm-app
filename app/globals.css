@@ -4,69 +4,109 @@
 
 @layer base {
   :root {
-    --background: 40 30% 98%;
-    --foreground: 222 20% 12%;
+    /* Light — warm white canvas, charcoal ink, gold accents */
+    --background: 36 33% 96%;        /* #F9F7F4 warm white */
+    --foreground: 0 0% 10%;          /* #1A1A1A charcoal */
     --card: 0 0% 100%;
-    --card-foreground: 222 20% 12%;
-    --primary: 222 35% 16%;
-    --primary-foreground: 40 30% 98%;
-    --secondary: 40 25% 94%;
-    --secondary-foreground: 222 20% 18%;
-    --muted: 40 20% 94%;
-    --muted-foreground: 222 10% 42%;
-    --accent: 40 40% 90%;
-    --accent-foreground: 222 30% 16%;
-    --destructive: 0 72% 45%;
+    --card-foreground: 0 0% 10%;
+    --primary: 0 0% 10%;             /* charcoal */
+    --primary-foreground: 36 33% 97%;
+    --secondary: 36 24% 92%;
+    --secondary-foreground: 0 0% 14%;
+    --muted: 36 20% 92%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 43 52% 90%;            /* soft gold tint */
+    --accent-foreground: 0 0% 14%;
+    --destructive: 0 65% 45%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 15% 86%;
-    --input: 40 15% 86%;
-    --ring: 38 45% 50%;
-    --radius: 0.6rem;
+    --border: 36 16% 86%;
+    --input: 36 16% 84%;
+    --ring: 43 53% 54%;              /* gold */
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222 30% 8%;
-    --foreground: 40 25% 92%;
-    --card: 222 26% 11%;
-    --card-foreground: 40 25% 92%;
-    --primary: 40 40% 88%;
-    --primary-foreground: 222 35% 12%;
-    --secondary: 222 20% 16%;
-    --secondary-foreground: 40 25% 90%;
-    --muted: 222 18% 16%;
-    --muted-foreground: 40 10% 62%;
-    --accent: 222 22% 20%;
-    --accent-foreground: 40 30% 90%;
-    --destructive: 0 62% 50%;
+    /* Dark — deep charcoal, warm ivory text, gold accents */
+    --background: 0 0% 7%;           /* #121212 */
+    --foreground: 36 30% 92%;
+    --card: 0 0% 10%;                /* #1A1A1A */
+    --card-foreground: 36 30% 92%;
+    --primary: 43 53% 54%;           /* gold becomes primary action in dark */
+    --primary-foreground: 0 0% 8%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 36 30% 90%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 36 10% 62%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 43 53% 60%;
+    --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 18% 20%;
-    --input: 222 18% 22%;
-    --ring: 38 45% 55%;
+    --border: 0 0% 18%;
+    --input: 0 0% 20%;
+    --ring: 43 53% 54%;
   }
 
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/15 bg-white/10 backdrop-blur-xl;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  }
+  .glass-dark {
+    @apply border border-white/10 bg-charcoal-900/40 backdrop-blur-xl;
+  }
+  .gold-text {
+    @apply bg-gold-sheen bg-clip-text text-transparent;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-luxe text-gold;
+  }
+  .hairline {
+    @apply h-px w-12 bg-gold-sheen;
   }
 }
 
 @layer utilities {
   .container-px {
-    @apply px-4 sm:px-6 lg:px-8;
+    @apply px-5 sm:px-8 lg:px-10;
   }
   .text-balance {
     text-wrap: balance;
   }
+  .gold-ring-hover {
+    @apply transition-all duration-300 hover:shadow-gold hover:ring-1 hover:ring-gold/40;
+  }
 }
 
-/* Subtle scrollbar */
+/* Refined scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 ::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
+  @apply rounded-full bg-gold/30;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gold/50;
+}
+
+::selection {
+  background: rgba(201, 168, 76, 0.28);
 }

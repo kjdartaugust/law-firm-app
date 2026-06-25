@@ -11,7 +11,7 @@ export default async function PortalLayout({ children }: { children: React.React
       <Sidebar role={role} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar profile={user.profile} email={user.email} />
-        <main className="flex-1 bg-secondary/30 p-6 lg:p-8">
+        <main className="flex-1 bg-background p-5 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-6xl animate-fade-in">{children}</div>
         </main>
       </div>

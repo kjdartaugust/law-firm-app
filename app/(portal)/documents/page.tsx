@@ -1,56 +1,57 @@
 import Link from 'next/link';
-import { FileText } from 'lucide-react';
+import { FileText, ShieldCheck } from 'lucide-react';
 import { requireUser } from '@/lib/auth';
 import { createClient } from '@/lib/supabase/server';
 import { PageHeader } from '@/components/portal/page-header';
-import { Card, CardContent } from '@/components/ui/card';
-import { DocumentRow } from '@/components/portal/document-row';
+import { Button } from '@/components/ui/button';
+import { DocumentCard } from '@/components/portal/document-card';
+import { formatBytes } from '@/lib/utils';
 import type { CaseDocument, Case } from '@/lib/types';
 
-export const metadata = { title: 'Documents' };
+export const metadata = { title: 'Document Vault — Lexara Legal' };
 
 export default async function DocumentsPage() {
   const user = await requireUser();
   const supabase = await createClient();
   const isStaff = user.profile?.role === 'admin' || user.profile?.role === 'lawyer';
 
-  const { data: docs } = await supabase
-    .from('documents')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const { data: docs } = await supabase.from('documents').select('*').order('created_at', { ascending: false });
   const documents = (docs ?? []) as CaseDocument[];
 
-  // Map case ids to titles for grouping context.
   const caseIds = [...new Set(documents.map((d) => d.case_id))];
   const { data: cases } = caseIds.length
     ? await supabase.from('cases').select('*').in('id', caseIds)
     : { data: [] };
   const caseMap = new Map((cases as Case[] | null ?? []).map((c) => [c.id, c]));
+  const totalBytes = documents.reduce((s, d) => s + (d.size_bytes ?? 0), 0);
 
   return (
     <>
-      <PageHeader title="Documents" description="Every file across your matters, stored securely." />
+      <PageHeader title="Document Vault" description="Every file across your matters, encrypted and access-controlled.">
+        <div className="hidden items-center gap-2 rounded-full border border-gold/30 bg-gold-sheen/10 px-4 py-2 text-xs text-gold sm:flex">
+          <ShieldCheck className="h-4 w-4" /> {documents.length} files · {formatBytes(totalBytes)}
+        </div>
+      </PageHeader>
+
       {documents.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <FileText className="h-10 w-10 text-muted-foreground" />
-            <p className="text-muted-foreground">No documents yet. Upload files from within a case.</p>
-            <Link href="/cases" className="text-sm text-gold hover:underline">Go to cases</Link>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-border bg-card/50 py-20 text-center backdrop-blur">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gold-sheen/15 text-gold">
+            <FileText className="h-7 w-7" />
+          </div>
+          <p className="text-muted-foreground">Your vault is empty. Upload files from within a matter.</p>
+          <Link href="/cases"><Button variant="gold">Go to matters</Button></Link>
+        </div>
       ) : (
-        <Card>
-          <CardContent className="space-y-2 p-6">
-            {documents.map((d) => (
-              <div key={d.id}>
-                <Link href={`/cases/${d.case_id}`} className="text-xs text-muted-foreground hover:text-foreground">
-                  {caseMap.get(d.case_id)?.title ?? 'Case'}
-                </Link>
-                <DocumentRow doc={d} canDelete={d.uploaded_by === user.id || isStaff} />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {documents.map((d) => (
+            <DocumentCard
+              key={d.id}
+              doc={d}
+              caseTitle={caseMap.get(d.case_id)?.title}
+              canDelete={d.uploaded_by === user.id || isStaff}
+            />
+          ))}
+        </div>
       )}
     </>
   );
