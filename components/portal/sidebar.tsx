@@ -2,28 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard, Briefcase, FileText, CalendarClock,
-  Receipt, MessagesSquare, Users, Settings, Scale, ShieldCheck,
-} from 'lucide-react';
+import { Settings, Scale } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getNav, adminNavItem } from '@/components/portal/nav-items';
 import type { UserRole } from '@/lib/types';
-
-const baseNav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/cases', label: 'Cases', icon: Briefcase },
-  { href: '/documents', label: 'Documents', icon: FileText },
-  { href: '/appointments', label: 'Appointments', icon: CalendarClock },
-  { href: '/billing', label: 'Billing', icon: Receipt },
-  { href: '/messages', label: 'Messages', icon: MessagesSquare },
-];
 
 export function Sidebar({ role }: { role: UserRole }) {
   const pathname = usePathname();
-  const nav = [...baseNav];
-  if (role === 'lawyer' || role === 'admin') {
-    nav.push({ href: '/attorneys', label: 'Directory', icon: Users });
-  }
+  const nav = getNav(role);
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card lg:flex">
@@ -55,14 +41,14 @@ export function Sidebar({ role }: { role: UserRole }) {
               Administration
             </div>
             <Link
-              href="/admin"
+              href={adminNavItem.href}
               className={cn(
                 'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                 pathname.startsWith('/admin') ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'
               )}
             >
-              <ShieldCheck className="h-4 w-4" />
-              Admin Dashboard
+              <adminNavItem.icon className="h-4 w-4" />
+              {adminNavItem.label}
             </Link>
           </>
         )}

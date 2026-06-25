@@ -1,5 +1,6 @@
 import { signOut } from '@/lib/actions/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { MobileNav } from '@/components/portal/mobile-nav';
 import { Badge } from '@/components/ui/badge';
 import { initials } from '@/lib/utils';
 import { LogOut } from 'lucide-react';
@@ -7,12 +8,16 @@ import type { Profile } from '@/lib/types';
 
 export function Topbar({ profile, email }: { profile: Profile | null; email?: string }) {
   const name = profile?.full_name || email || 'Account';
+  const role = profile?.role ?? 'client';
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border bg-background/80 px-6 backdrop-blur">
-      <div>
-        <p className="text-sm text-muted-foreground">Welcome back,</p>
-        <p className="font-serif text-base font-semibold leading-none">{name}</p>
+    <header className="flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur sm:px-6">
+      <div className="flex items-center gap-3">
+        <MobileNav role={role} />
+        <div>
+          <p className="text-sm text-muted-foreground">Welcome back,</p>
+          <p className="font-serif text-base font-semibold leading-none">{name}</p>
+        </div>
       </div>
       <div className="flex items-center gap-3">
         {profile?.role && profile.role !== 'client' && (

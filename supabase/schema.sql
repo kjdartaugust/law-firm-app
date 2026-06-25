@@ -355,3 +355,11 @@ create policy "docs_storage_delete" on storage.objects
     bucket_id = 'case-documents'
     and (owner = auth.uid() or public.is_staff())
   );
+
+-- ===========================================================================
+-- Realtime — broadcast message inserts so threads update live.
+-- (RLS still applies to which rows each client receives.)
+-- ===========================================================================
+do $$ begin
+  alter publication supabase_realtime add table public.messages;
+exception when duplicate_object then null; end $$;
