@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, ArrowUpRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { initials } from '@/lib/utils';
@@ -53,9 +54,15 @@ export default async function AttorneysPage() {
                 <article className="group relative h-80 overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-500 hover:shadow-luxe">
                   {/* Default face */}
                   <div className="flex h-full flex-col items-center justify-center p-8 text-center transition-all duration-500 group-hover:-translate-y-4 group-hover:opacity-0">
-                    <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-gold/50 bg-gold-sheen/10 font-serif text-2xl font-bold text-gold">
-                      {initials(l.full_name || 'A')}
-                    </div>
+                    {l.avatar_url ? (
+                      <div className="relative h-24 w-24 overflow-hidden rounded-full ring-2 ring-gold/50">
+                        <Image src={l.avatar_url} alt={l.full_name} fill sizes="96px" className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-gold/50 bg-gold-sheen/10 font-serif text-2xl font-bold text-gold">
+                        {initials(l.full_name || 'A')}
+                      </div>
+                    )}
                     <h3 className="mt-5 font-serif text-xl font-semibold">{l.full_name}</h3>
                     <p className="mt-1 text-sm text-gold">{l.title ?? 'Attorney'}</p>
                     {l.years_experience != null && (
