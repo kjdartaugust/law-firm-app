@@ -47,7 +47,7 @@ export default async function BookPage() {
 }
 
 async function BookingForm({ userId }: { userId: string }) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data: lawyers }, { data: cases }] = await Promise.all([
     supabase.from('profiles').select('*').eq('role', 'lawyer').order('full_name'),
     supabase.from('cases').select('*').eq('client_id', userId).order('created_at', { ascending: false }),

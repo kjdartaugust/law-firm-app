@@ -9,7 +9,7 @@ import type { Case } from '@/lib/types';
 export const metadata = { title: 'Messages' };
 
 export default async function MessagesPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase.from('cases').select('*').order('created_at', { ascending: false });
   const cases = (data ?? []) as Case[];
 

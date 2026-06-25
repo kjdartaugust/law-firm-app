@@ -11,7 +11,7 @@ export const metadata = { title: 'Documents' };
 
 export default async function DocumentsPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const isStaff = user.profile?.role === 'admin' || user.profile?.role === 'lawyer';
 
   const { data: docs } = await supabase

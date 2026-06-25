@@ -9,7 +9,7 @@ export async function updateProfile(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const areas = String(formData.get('practice_areas') ?? '')
     .split(',')
     .map((s) => s.trim())
@@ -38,7 +38,7 @@ export async function updateProfile(formData: FormData) {
 /** Admin-only: change a user's role. */
 export async function setUserRole(userId: string, role: UserRole) {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.from('profiles').update({ role }).eq('id', userId);
   if (error) return { error: error.message };
 

@@ -12,7 +12,7 @@ export async function sendMessage(formData: FormData) {
   const body = String(formData.get('body') ?? '').trim();
   if (!caseId || !body) return { error: 'Message cannot be empty.' };
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.from('messages').insert({
     case_id: caseId,
     sender_id: user.id,

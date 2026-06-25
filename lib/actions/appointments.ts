@@ -9,7 +9,7 @@ export async function bookAppointment(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.from('appointments').insert({
     client_id: user.id,
     lawyer_id: String(formData.get('lawyer_id') ?? '') || null,
@@ -28,7 +28,7 @@ export async function bookAppointment(formData: FormData) {
 }
 
 export async function updateAppointmentStatus(id: string, status: AppointmentStatus) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.from('appointments').update({ status }).eq('id', id);
   if (error) return { error: error.message };
 

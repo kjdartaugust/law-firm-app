@@ -11,7 +11,7 @@ export async function signIn(_prev: AuthState, formData: FormData): Promise<Auth
   const password = String(formData.get('password') ?? '');
   const redirectTo = String(formData.get('redirect') ?? '/dashboard');
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: error.message };
 
@@ -26,7 +26,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
 
   if (password.length < 8) return { error: 'Password must be at least 8 characters.' };
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -42,7 +42,7 @@ export async function signUp(_prev: AuthState, formData: FormData): Promise<Auth
 }
 
 export async function signOut() {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
   redirect('/login');

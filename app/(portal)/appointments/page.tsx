@@ -10,9 +10,10 @@ import type { Appointment, Profile, Case } from '@/lib/types';
 
 export const metadata = { title: 'Appointments' };
 
-export default async function AppointmentsPage({ searchParams }: { searchParams: { case?: string } }) {
+export default async function AppointmentsPage({ searchParams }: { searchParams: Promise<{ case?: string }> }) {
+  const { case: caseParam } = await searchParams;
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const isStaff = user.profile?.role === 'admin' || user.profile?.role === 'lawyer';
 
   const [{ data: appts }, { data: lawyers }, { data: cases }] = await Promise.all([
@@ -22,6 +23,8 @@ export default async function AppointmentsPage({ searchParams }: { searchParams:
   ]);
 
   const appointments = (appts ?? []) as Appointment[];
+  // Server Component: a single per-request timestamp for splitting upcoming/past.
+  // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
   const upcoming = appointments.filter((a) => new Date(a.scheduled_at).getTime() >= now);
   const past = appointments.filter((a) => new Date(a.scheduled_at).getTime() < now);
@@ -42,7 +45,7 @@ export default async function AppointmentsPage({ searchParams }: { searchParams:
             <AppointmentForm
               lawyers={(lawyers ?? []) as Profile[]}
               cases={(cases ?? []) as Case[]}
-              defaultCaseId={searchParams.case}
+              defaultCaseId={caseParam}
             />
           </CardContent>
         </Card>

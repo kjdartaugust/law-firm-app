@@ -4,7 +4,7 @@ import type { Profile } from '@/lib/types';
 
 /** Returns the current auth user + profile, or null if signed out. */
 export async function getCurrentUser(): Promise<{ id: string; email?: string; profile: Profile | null } | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

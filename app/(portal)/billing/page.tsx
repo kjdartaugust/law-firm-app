@@ -13,7 +13,7 @@ export const metadata = { title: 'Billing' };
 
 export default async function BillingPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const isStaff = user.profile?.role === 'admin' || user.profile?.role === 'lawyer';
 
   const { data } = await supabase.from('invoices').select('*').order('issued_at', { ascending: false });

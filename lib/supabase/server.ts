@@ -6,8 +6,8 @@ import type { Database } from '@/lib/types';
  * Server-side Supabase client bound to the request's cookies.
  * Use in Server Components, Route Handlers and Server Actions.
  */
-export function createClient() {
-  const cookieStore = cookies();
+export async function createClient() {
+  const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

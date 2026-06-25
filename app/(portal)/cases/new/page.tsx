@@ -7,7 +7,7 @@ import type { PracticeArea, Profile } from '@/lib/types';
 export const metadata = { title: 'Open a case' };
 
 export default async function NewCasePage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const [{ data: areas }, { data: lawyers }] = await Promise.all([
     supabase.from('practice_areas').select('*').order('name'),
     supabase.from('profiles').select('*').eq('role', 'lawyer').order('full_name'),

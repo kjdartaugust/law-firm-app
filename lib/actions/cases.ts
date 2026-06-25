@@ -9,7 +9,7 @@ export async function createCase(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { error: 'Not authenticated' };
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const isStaff = user.profile?.role === 'admin' || user.profile?.role === 'lawyer';
 
   const { error } = await supabase.from('cases').insert({
@@ -28,7 +28,7 @@ export async function createCase(formData: FormData) {
 }
 
 export async function updateCaseStatus(caseId: string, status: CaseStatus) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase
     .from('cases')
     .update({ status, closed_at: status === 'closed' ? new Date().toISOString() : null })
@@ -41,7 +41,7 @@ export async function updateCaseStatus(caseId: string, status: CaseStatus) {
 }
 
 export async function assignLawyer(caseId: string, lawyerId: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase
     .from('cases')
     .update({ lawyer_id: lawyerId || null })

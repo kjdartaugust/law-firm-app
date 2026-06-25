@@ -15,10 +15,11 @@ const FILTERS: { label: string; value: CaseStatus | 'all' }[] = [
   { label: 'Closed', value: 'closed' },
 ];
 
-export default async function CasesPage({ searchParams }: { searchParams: { status?: string } }) {
-  const supabase = createClient();
+export default async function CasesPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
+  const { status } = await searchParams;
+  const supabase = await createClient();
   let query = supabase.from('cases').select('*').order('created_at', { ascending: false });
-  const active = searchParams.status ?? 'all';
+  const active = status ?? 'all';
   if (active !== 'all') query = query.eq('status', active as CaseStatus);
 
   const { data } = await query;

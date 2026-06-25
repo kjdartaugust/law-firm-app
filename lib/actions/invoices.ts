@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import type { InvoiceStatus } from '@/lib/types';
 
 export async function createInvoice(formData: FormData) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const dollars = Number(formData.get('amount') ?? 0);
 
   const { error } = await supabase.from('invoices').insert({
@@ -24,7 +24,7 @@ export async function createInvoice(formData: FormData) {
 }
 
 export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase
     .from('invoices')
     .update({ status, paid_at: status === 'paid' ? new Date().toISOString() : null })

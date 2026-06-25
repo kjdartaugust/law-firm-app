@@ -14,7 +14,7 @@ export const metadata = { title: 'Admin' };
 
 export default async function AdminPage() {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [{ data: users }, { data: cases }, { data: invoices }, { data: appts }] = await Promise.all([
     supabase.from('profiles').select('*').order('created_at', { ascending: false }),

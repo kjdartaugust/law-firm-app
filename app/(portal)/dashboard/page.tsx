@@ -12,7 +12,7 @@ import type { Case, Appointment, Invoice } from '@/lib/types';
 
 export default async function DashboardPage() {
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [{ data: cases }, { data: appts }, { data: invoices }, { count: docCount }] = await Promise.all([
     supabase.from('cases').select('*').order('created_at', { ascending: false }).limit(5),

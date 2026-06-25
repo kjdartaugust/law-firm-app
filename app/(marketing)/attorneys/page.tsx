@@ -6,7 +6,7 @@ import type { Profile } from '@/lib/types';
 export const metadata = { title: 'Our Attorneys — Sterling & Crane' };
 
 export default async function AttorneysPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from('profiles')
     .select('*')

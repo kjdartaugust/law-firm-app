@@ -8,11 +8,12 @@ import { MessageComposer } from '@/components/portal/message-composer';
 import { cn, formatDateTime, initials } from '@/lib/utils';
 import type { Case, Message, Profile } from '@/lib/types';
 
-export default async function ThreadPage({ params }: { params: { caseId: string } }) {
+export default async function ThreadPage({ params }: { params: Promise<{ caseId: string }> }) {
+  const { caseId } = await params;
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
-  const { data: caseRow } = await supabase.from('cases').select('*').eq('id', params.caseId).single();
+  const { data: caseRow } = await supabase.from('cases').select('*').eq('id', caseId).single();
   if (!caseRow) notFound();
   const c = caseRow as Case;
 

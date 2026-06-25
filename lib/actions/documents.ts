@@ -15,7 +15,7 @@ export async function uploadDocument(formData: FormData) {
   if (!caseId || !file || file.size === 0) return { error: 'A case and file are required.' };
   if (file.size > 25 * 1024 * 1024) return { error: 'File exceeds the 25 MB limit.' };
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const safeName = file.name.replace(/[^\w.\-]/g, '_');
   const path = `${caseId}/${Date.now()}-${safeName}`;
 
@@ -45,7 +45,7 @@ export async function uploadDocument(formData: FormData) {
 
 /** Returns a short-lived signed URL for a private document. */
 export async function getDocumentUrl(storagePath: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.storage
     .from(BUCKET)
     .createSignedUrl(storagePath, 60 * 5);
@@ -54,7 +54,7 @@ export async function getDocumentUrl(storagePath: string) {
 }
 
 export async function deleteDocument(id: string, storagePath: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.storage.from(BUCKET).remove([storagePath]);
   const { error } = await supabase.from('documents').delete().eq('id', id);
   if (error) return { error: error.message };

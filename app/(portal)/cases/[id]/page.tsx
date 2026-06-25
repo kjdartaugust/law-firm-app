@@ -12,11 +12,12 @@ import { CaseStatusControl } from '@/components/portal/case-status-control';
 import { formatDate } from '@/lib/utils';
 import type { Case, CaseDocument, Profile } from '@/lib/types';
 
-export default async function CaseDetailPage({ params }: { params: { id: string } }) {
+export default async function CaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const user = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
-  const { data: caseRow } = await supabase.from('cases').select('*').eq('id', params.id).single();
+  const { data: caseRow } = await supabase.from('cases').select('*').eq('id', id).single();
   if (!caseRow) notFound();
   const c = caseRow as Case;
 
